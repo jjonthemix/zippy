@@ -8,14 +8,17 @@ var Router = Class.create({
 		},
 		dispatch: function(loc){
 			var location = this.parse(loc.hash || '');
-			if(!this._location){
-				this._location = location;
+			if(this._location && this._location !== location && this._routing[this._location]){
+				this._routing[this._location].doOnUnload();
+			}else if(!this._location){
+				this._location = location;	
 			}else if(this._location === location){
 				return;
 			}
+		
 			this._location = location;
 			if(this._routing[this._location]){
-				this._routing[this._location]();
+				this._routing[this._location].doOnLoad();
 			}
 		},
 		parse: function(location){
